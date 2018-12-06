@@ -36,6 +36,20 @@ trait HasOptions
         }
     }
 
+    public function unsetOption($option)
+    {
+        $options = $this->options;
+        unset($options[$option]);
+        $this->options = $options;
+    }
+
+    public function unsetOptions($options)
+    {
+        foreach ( $options as $option ) {
+            $this->unsetOption($option);
+        }
+    }
+
     public function scopeWhereOption(Builder $query, $key, $value)
     {
         return $query->where('options->'.$key, $value);

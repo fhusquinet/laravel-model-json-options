@@ -118,4 +118,53 @@ class HasOptionsTraitTest extends TestCase
         $this->assertEquals('always', $user->getOption('notifications.slack'));
     }
 
+    /**
+     * @test
+     */
+    public function a_model_can_unset_an_option()
+    {
+        $user = new User();
+        $user->name = 'florian';
+        $user->setOption(['notifications' => ['phone' => true, 'mail' => false, 'slack' => 'always']]);
+        $user->save();
+
+        $user->unsetOption('notifications');
+        $user->save();
+
+        $this->assertNull($user->getOption('notifications'));
+    }
+
+    /**
+     * @test
+     */
+    public function a_model_can_unset_multiple_options()
+    {
+        $user = new User();
+        $user->name = 'florian';
+        $user->setOption(['notifications' => ['phone' => true, 'mail' => false, 'slack' => 'always'], 'active' => true]);
+        $user->save();
+
+        $user->unsetOptions(['notifications', 'active']);
+        $user->save();
+
+        $this->assertNull($user->getOption('notifications'));
+        $this->assertNull($user->getOption('active'));
+    }
+
+    /**
+     * @test
+     */
+    public function a_model_can_unset_an_option_it_doesnt_already_have()
+    {
+        $user = new User();
+        $user->name = 'florian';
+        $user->setOption(['notifications' => ['phone' => true, 'mail' => false, 'slack' => 'always']]);
+        $user->save();
+
+        $user->unsetOption('active');
+        $user->save();
+
+        $this->assertNull($user->getOption('active'));
+    }
+
 }
